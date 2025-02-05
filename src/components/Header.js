@@ -1,19 +1,32 @@
 // src/components/Header.js
 import React from 'react';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 function Header() {
   return (
-    <div className="header">
-      <h1>React App</h1>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/counter">Counter</Link>
-        <Link to="/user-form">User Form</Link>
-        <Link to="/rich-text-editor">Rich Text Editor</Link>
-        <Link to="/dashboard">Dashboard</Link>
-      </nav>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          React App
+        </Typography>
+        <Button color="inherit" component={Link} to="/">
+          Home
+        </Button>
+        <Button color="inherit" component={Link} to="/counter">
+          Counter
+        </Button>
+        <Button color="inherit" component={Link} to="/user-form">
+          User Form
+        </Button>
+        <Button color="inherit" component={Link} to="/rich-text-editor">
+          Rich Text Editor
+        </Button>
+        <Button color="inherit" component={Link} to="/dashboard">
+          Dashboard
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
 }
 

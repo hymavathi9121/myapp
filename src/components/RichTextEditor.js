@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // import styles for React Quill
+import React, { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const RichTextEditor = () => {
-    const [editorContent, setEditorContent] = useState('');
+  const [editorContent, setEditorContent] = useState("");
 
-    const handleChange = (value) => {
-        setEditorContent(value);
-    };
+  const handleSave = () => {
+    localStorage.setItem("editorContent", editorContent);
+    alert("Content saved");
+  };
 
-    return (
-        <div>
-            <ReactQuill value={editorContent} onChange={handleChange} />
-        </div>
-    );
+  return (
+    <div>
+      <ReactQuill theme="snow" value={editorContent} onChange={setEditorContent} />
+      <button onClick={handleSave}>Save Content</button>
+    </div>
+  );
 };
 
 export default RichTextEditor;

@@ -1,48 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/UserForm.css"; // If Home.css is inside the `styles` folder
+
 
 const UserForm = () => {
-    const [userData, setUserData] = useState({ name: '', address: '', email: '', phone: '' });
-    const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [formData, setFormData] = useState({ name: "", address: "", email: "", phone: "" });
+  const [isDirty, setIsDirty] = useState(false);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const savedData = JSON.parse(localStorage.getItem('userData'));
-        if (savedData) {
-            setUserData(savedData);
-        }
-
-        const handleBeforeUnload = (e) => {
-            if (unsavedChanges) {
-                e.returnValue = 'You have unsaved changes! Are you sure you want to leave?';
-            }
-        };
-        window.addEventListener('beforeunload', handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, [unsavedChanges]);
-
-    const handleChange = (e) => {
-        setUserData({ ...userData, [e.target.name]: e.target.value });
-        setUnsavedChanges(true);
-    };
-
-    const handleSubmit = (e) => {
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
         e.preventDefault();
-        localStorage.setItem('userData', JSON.stringify(userData));
-        setUnsavedChanges(false);
-        alert('Data saved!');
+        e.returnValue = "You have unsaved changes.";
+      }
     };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" name="name" value={userData.name} onChange={handleChange} placeholder="Name" required />
-            <input type="text" name="address" value={userData.address} onChange={handleChange} placeholder="Address" required />
-            <input type="email" name="email" value={userData.email} onChange={handleChange} placeholder="Email" required />
-            <input type="phone" name="phone" value={userData.phone} onChange={handleChange} placeholder="Phone" required />
-            <button type="submit">Save</button>
-        </form>
-    );
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setIsDirty(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem("userData", JSON.stringify({ ...formData, id: Date.now() }));
+    setIsDirty(false);
+    alert("Form submitted successfully");
+    navigate("/dashboard");
+  };
+
+  return (
+    <form className="user-form" onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input name="name" value={formData.name} onChange={handleChange} required />
+      </label>
+      <label>
+        Address:
+        <input name="address" value={formData.address} onChange={handleChange} required />
+      </label>
+      <label>
+        Email:
+        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+      </label>
+      <label>
+        Phone:
+        <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
 };
 
 export default UserForm;
